@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+    name="description"
+    content="Workflo helps you maintain a productive workflow by helping you time your working and resting time. You set a goal and a time-span to work on it, once you feel like you are at 50% or less focus you hit the break button. Workflo will calculate the length of your break based on the length of your work time before resuming your initial timer. This allows you to keep your productivity high while avoiding distractions and unnecessary breaks to your work flow." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=EG+Garamond:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="workflo_stylesheet.css" />
+    <title>Workflo</title>
+  </head>
+  <body>
+    <div class="app-container">
+      <h1>workflo</h1>
+      <div id="goal-section">
+        <h5>Set your goal:</h5>
+        <input id="goal" type="text" placeholder="Your goal/task">
+        <h5>Allocate time (minutes):</h5>
+        <input id="time" type="number" min="1" placeholder="Time">
+      </div>
+
+      <p id = "instructions">Once you feel like you have reached 50% of your focus take a break. We calculat the break time based on how long you worked. Once your rbeak time is over, the working timer will resume.</p>
+      
+      <div class="app-circle">
+        <svg class="app-static-circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle class="app-static-ring" r="40" cx="50" cy="50" fill="transparent" stroke-width="4"></circle>
+        </svg>
+        <div class="app-counter-box">
+          <p><span class="minutes">00</span>:<span class="seconds">00</span></p>
+        </div>
+      </div>
+
+      <div class="buttons-container">
+        <button class="btn-start" onclick="startTimer()">Start</button>
+        <button class="btn-break" onclick="takeBreak()">Take a Break</button>
+        <button class="btn-reset" onclick="reset()">Reset</button>
+      </div>
+    </div>
+    <script src="workflo_javascript.js"></script>
+  </body>
+</html>
