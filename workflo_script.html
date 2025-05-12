@@ -3,41 +3,80 @@
   <head>
     <meta
     name="description"
-    content="Workflo helps you maintain a productive workflow by helping you time your working and resting time. You set a goal and a time-span to work on it, once you feel like you are at 50% or less focus you hit the break button. Workflo will calculate the length of your break based on the length of your work time before resuming your initial timer. This allows you to keep your productivity high while avoiding distractions and unnecessary breaks to your work flow." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=EG+Garamond:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="workflo_stylesheet.css" />
+    content="Workflo helps you maintain a productive workflow by helping you time your working and resting time. You set a goal and a time-span to work on it, once you feel like you are at 50% or less focus you hit the break button. Workflo will calculate the length of your break based on the length of your work time before resuming your initial timer. This allows you to keep your productivity high while avoiding distractions and unnecessary breaks to your work flow." 
+    name="viewport" content="width=device-width, initial-scale=1.0"
+    />
+    <link rel="stylesheet" href="output.css" />
+    <!-- <link rel="stylesheet" href="workflo_stylesheet.css" /> -->
     <title>Workflo</title>
   </head>
 
-  <body>
-    <div class="app-container">
-      <h1>workflo</h1>
-      <div id="goal-section">
-        <h5>Set your goal:</h5>
-        <input id="goal" type="text" placeholder="Your goal/task">
-        <h5>Allocate time (minutes):</h5>
-        <input id="time" type="number" min="1" placeholder="Time">
-      </div>
+  <body class="bg-vanilla">
 
-      <p id = "instructions">Once you feel like you have reached 50% of your focus take a break. We calculate your break time based on how long you worked. Once your break time is over, the working timer will resume.</p>
-      
-      <div class="app-circle">
-        <svg class="app-static-circle" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle class="app-static-ring" r="40" cx="50" cy="50" fill="transparent" stroke-width="4"></circle>
-        </svg>
-        <div class="app-counter-box">
-          <p><span class="minutes">00</span>:<span class="seconds">00</span></p>
+    <main class="sm:mx-16 my-8">
+
+      <div class="app-container flex flex-col mx-auto text-justify">
+        <h1 class="text-center font-extrabold text-6xl mb-4 text-moonstone">workflo</h1>
+        
+        <p id = "about" class="font-bold mb-8 sm:mx-36 mx-16">After years of trying and failing to effectively integrate the pomodoro system into my routine I struggled with the rigid deadlines and lack of flexibility when I felt most inspired. As soon as I got into a proper workflow my 25 minutes would be gone and it would be time for an ignored break. workflo is meant to help balance breaks and worktime with the flexibility to enable for proper work and proper rest.</p>
+
+        <div id="goal-section" class="p-4 rounded-2xl bg-tangerine items-center text-center sm:w-3/4 mx-auto">
+          <h5 class="font-bold mb-4">Set your goal:</h5>
+          <input id="goal" type="text" class="bg-tangerine-light p-4 rounded-2xl w-full sm:w-2/3" placeholder="Your goal/task">
+          <h5 class="font-bold my-4">Allocate time (minutes):</h5>
+          <input id="time" type="number" class="bg-tangerine-light p-4 rounded-2xl w-full sm:w-2/3" min="1" placeholder="Time">
         </div>
-      </div>
 
-      <div class="buttons-container">
-        <button class="btn-start" onclick="startTimer()">Start</button>
-        <button class="btn-break" onclick="takeBreak()">Take a Break</button>
-        <button class="btn-reset" onclick="reset()">Reset</button>
+        <p id="instructions" class="font-bold my-8 sm:mx-36 mx-16">Once you feel like you have reached 50% of your focus take a break. We calculate your break time based on how long you worked. Once your break time is over, the working timer will resume.</p>
+        
+    <!-- Circular Timer Container -->
+    <div class="relative w-48 aspect-square mx-auto">
+      <svg class="w-full h-full rotate-[-90deg]" viewBox="0 0 100 100">
+        <!-- Background Circle -->
+        <circle
+          stroke="#181818"
+          stroke-width="8"
+          fill="transparent"
+          r="45"
+          cx="50"
+          cy="50"
+        />
+        <!-- Progress Circle -->
+        <circle
+          id="progressCircle"
+          class="text-moonstone transition-all duration-500"
+          stroke="currentColor"
+          stroke-width="8"
+          fill="transparent"
+          r="45"
+          cx="50"
+          cy="50"
+          stroke-dasharray="282.6"
+          stroke-dashoffset="0"
+        />
+      </svg>
+      <div class="absolute inset-0 flex items-center justify-center text-3xl font-bold text-neutral-900">
+        <span id="timerText">00:00</span>
       </div>
     </div>
+    
+
+  <!-- Buttons -->
+  <div class="flex gap-4 my-8 mx-auto sm:justify-center">
+    <button onclick="startTimer()" class="px-4 py-2 font-bold text-xl text-white bg-green-500 rounded hover:bg-green-600">
+      Start
+    </button>
+    <button onclick="takeBreak()" class="px-4 py-2 font-bold text-xl text-white bg-yellow-500 rounded hover:bg-yellow-600">
+      Take a Break
+    </button>
+    <button onclick="reset()" class="px-4 py-2 font-bold text-xl text-white bg-red-500 rounded hover:bg-red-600">
+      Reset
+    </button>
+  </div>
+      </div>
+    </main>
+    <footer>
     <script src="workflo_javascript.js"></script>
+  </footer>
   </body>
 </html>
