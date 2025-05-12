@@ -1,75 +1,100 @@
-const startBtn = document.querySelector('.btn-start'); 
-const breakBtn = document.querySelector('.btn-break'); 
-const resetBtn = document.querySelector('.btn-reset'); 
-const submitBtn = document.querySelector('#submit');
-const session = document.querySelector('.minutes'); 
-const inputTime = document.querySelector('#time');
-let myInterval; 
-let totalSeconds;
+// Circular countdown timer JavaScript logic for Workflo
+const timerText = document.getElementById("timerText");
+const progressCircle = document.getElementById("progressCircle");
+const inputTime = document.getElementById("time");
+
+let totalSeconds = 0;
 let workedSeconds = 0;
+let initialTotalSeconds = 0;
+let timerInterval = null;
+let isOnBreak = false;
 
-const updateDisplay = (minutes, seconds) => {
-  const minuteDiv = document.querySelector('.minutes');
-  const secondDiv = document.querySelector('.seconds');
-  minuteDiv.textContent = minutes < 10 ? '0' + minutes : minutes;
-  secondDiv.textContent = seconds < 10 ? '0' + seconds : seconds;
-};
+const FULL_DASH_ARRAY = 282.6; // 2 * Math.PI * r (r = 45)
 
-const updateSeconds = () => {
+function updateTimerDisplay(minutes, seconds) {
+  const m = minutes < 10 ? `0${minutes}` : minutes;
+  const s = seconds < 10 ? `0${seconds}` : seconds;
+  timerText.textContent = `${m}:${s}`;
+}
+
+function updateCircleProgress() {
+  const current = isOnBreak ? totalSeconds : initialTotalSeconds - totalSeconds;
+  const base = isOnBreak ? workedSeconds : initialTotalSeconds;
+  const progress = current / base;
+  const dashOffset = FULL_DASH_ARRAY * (1 - progress);
+  progressCircle.setAttribute("stroke-dashoffset", dashOffset);
+}
+
+function tickTimer(callback) {
   totalSeconds--;
-  workedSeconds++;
-  let minutesLeft = Math.floor(totalSeconds / 60);
-  let secondsLeft = totalSeconds % 60;
-  updateDisplay(minutesLeft, secondsLeft);
+  if (!isOnBreak) workedSeconds++;
 
-  if (minutesLeft === 0 && secondsLeft === 0) {
-    clearInterval(myInterval);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  updateTimerDisplay(minutes, seconds);
+  updateCircleProgress();
+
+  if (totalSeconds <= 0) {
+    clearInterval(timerInterval);
+    if (callback) callback();
   }
-};
+}
 
-const appTimer = () => {
-  clearInterval(myInterval);
-  totalSeconds = Number.parseInt(inputTime.value) * 60;
+function startTimer() {
+  clearInterval(timerInterval);
+
+  const input = parseInt(inputTime.value);
+  if (isNaN(input) || input <= 0) return;
+
+  totalSeconds = input * 60;
+  initialTotalSeconds = totalSeconds;
   workedSeconds = 0;
+  isOnBreak = false;
 
-  myInterval = setInterval(updateSeconds, 1000);
-};
+  updateTimerDisplay(Math.floor(totalSeconds / 60), totalSeconds % 60);
+  updateCircleProgress();
 
-const takeBreak = () => {
-  clearInterval(myInterval);
-  const breakTime = Math.floor((workedSeconds * 7) / 24); // Calculates the break time based on 7/24ths of the worked time
-  totalSeconds = breakTime;
+  timerInterval = setInterval(() => tickTimer(), 1000);
+}
 
-  const updateBreakSeconds = () => {
-    totalSeconds--;
-    let minutesLeft = Math.floor(totalSeconds / 60);
-    let secondsLeft = totalSeconds % 60;
-    updateDisplay(minutesLeft, secondsLeft);
-    
-    if (minutesLeft === 0 && secondsLeft === 0) {
-      clearInterval(myInterval);
+function takeBreak() {
+  clearInterval(timerInterval);
 
-      // Calculate remaining time and update the display
-      const remainingTime = Number.parseInt(inputTime.value) * 60 - workedSeconds;
-      totalSeconds = remainingTime;
-      minutesLeft = Math.floor(totalSeconds / 60);
-      secondsLeft = totalSeconds % 60;
-      updateDisplay(minutesLeft, secondsLeft);
+  const breakLength = Math.floor((workedSeconds * 7) / 24); // 7/24ths rule
+  totalSeconds = breakLength;
+  isOnBreak = true;
 
-      // Start a new interval with the remaining time
-      myInterval = setInterval(updateSeconds, 1000);
-    }
-  };
+  updateTimerDisplay(Math.floor(totalSeconds / 60), totalSeconds % 60);
+  updateCircleProgress();
 
-  myInterval = setInterval(updateBreakSeconds, 1000);
-};
+  timerInterval = setInterval(() => {
+    tickTimer(() => {
+      // Resume working timer after break ends
+      totalSeconds = initialTotalSeconds - workedSeconds;
+      isOnBreak = false;
+      updateTimerDisplay(Math.floor(totalSeconds / 60), totalSeconds % 60);
+      updateCircleProgress();
+      timerInterval = setInterval(() => tickTimer(), 1000);
+    });
+  }, 1000);
+}
 
-const resetTimer = () => {
-  clearInterval(myInterval);
+function reset() {
+  clearInterval(timerInterval);
+  totalSeconds = 0;
   workedSeconds = 0;
-  updateDisplay(0, 0);
-};
+  isOnBreak = false;
+  updateTimerDisplay(0, 0);
+  progressCircle.setAttribute("stroke-dashoffset", FULL_DASH_ARRAY);
+}
 
-startBtn.addEventListener('click', appTimer);
-breakBtn.addEventListener('click', takeBreak);
-resetBtn.addEventListener('click', resetTimer);
+// Optional: attach events to buttons if not inline in HTML
+document.querySelector("button[onclick='startTimer()']").addEventListener("click", startTimer);
+document.querySelector("button[onclick='takeBreak()']").addEventListener("click", takeBreak);
+document.querySelector("button[onclick='reset()']").addEventListener("click", reset);
+
+// Initial setup
+updateTimerDisplay(0, 0);
+progressCircle.setAttribute("stroke-dasharray", FULL_DASH_ARRAY);
+progressCircle.setAttribute("stroke-dashoffset", FULL_DASH_ARRAY);

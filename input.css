@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+    /* Colors */
+    --color-moonstone: #0FA3B1;
+    --color-vanilla: #EDDEA4;
+    --color-tangerine: #F7A072;
+    --color-honeydew: #D9E5D6;
+    --color-moonstone-light: #D9F9FC;
+    --color-tangerine-light: #F9BE9F;
+}
+

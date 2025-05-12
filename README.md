@@ -18,7 +18,6 @@ time you spend working.
 
 - HTML
   - [ ] Restructure
-  - [ ]
 - STYLE
   - [ ] Migrate to Tailwind
   - [ ] Redesign
